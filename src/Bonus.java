@@ -10,10 +10,12 @@ public class Bonus {
     static int[] userPredictions;
     static int[] userDiceRolls;
     static int[] userResults;
+    static String[] userPenalties;
 
     static int[] computersPredictions;
     static int[] computersDiceRolls;
     static int[] computersResults;
+    static String[] computerPenalties;
 
     static int scoreDifference;
 
@@ -36,17 +38,18 @@ public class Bonus {
         userPredictions = new int[toursNum];
         userDiceRolls = new int[toursNum];
         userResults = new int[toursNum];
+        userPenalties = new String[toursNum];
 
         computersPredictions = new int[toursNum];
         computersDiceRolls = new int[toursNum];
         computersResults = new int[toursNum];
+        computerPenalties = new String[toursNum];
 
         scoreDifference = 0;
     }
 
     public static void tourLaunch(int tourNumber) {
         printGameTitle();
-        println("" + scoreDifference);
 
         int usersResult = userTurn(tourNumber);
         userResults[tourNumber] = usersResult;
@@ -64,7 +67,7 @@ public class Bonus {
     public static int userTurn(int tourNumber) {
         int usersDicesSum = getUserInput();
         userPredictions[tourNumber] = usersDicesSum;
-
+        userPenalties[tourNumber] = "wasn't";
         int dice1, dice2;
 
         boolean isCheating = isUserCheating();
@@ -90,9 +93,9 @@ public class Bonus {
                 printDice(dice1);
                 dice2 = rollTheDice();
                 printDice(dice2);
+                userPenalties[tourNumber] = "was";
             }
         } else {
-            println("User decided not to cheat.");
             println("User rolls the dices...\n");
             dice1 = rollTheDice();
             printDice(dice1);
@@ -109,6 +112,7 @@ public class Bonus {
     public static int computersTurn(int tourNumber) {
         int computersDicesSum = rand.nextInt(11) + 2;
         computersPredictions[tourNumber] = computersDicesSum;
+        computerPenalties[tourNumber] = "wasn't";
 
         printf("\nComputer predicted %d points. ", computersDicesSum);
 
@@ -135,9 +139,9 @@ public class Bonus {
                 printDice(dice1);
                 dice2 = rollTheDice();
                 printDice(dice2);
+                computerPenalties[tourNumber] = "was";
             }
         } else {
-            println("Computer decided not to cheat.");
             println("Computer rolls the dices...");
             dice1 = rollTheDice();
             printDice(dice1);
@@ -256,17 +260,20 @@ public class Bonus {
         for (int i = 0; i < 3; i++) {
             printf("%12s%12s%9d%3s%12s%9d%n", lineSeparator, "Predicted:", userPredictions[i], lineSeparator, "Predicted:", computersPredictions[i]);
             printf("%8s%4s%7s%14d%3s%7s%14d%n", rounds[i], lineSeparator, "Dice:", userDiceRolls[i], lineSeparator, "Dice:", computersDiceRolls[i]);
+            if(userPenalties[i].equals("was") || computerPenalties[i].equals("was")){
+                printf("%12s%12s%9s%3s%12s%9s%n", lineSeparator, "Penalties:", userPenalties[i], lineSeparator, "Penalties:", computerPenalties[i]);
+            }
             printf("%12s%9s%12d%3s%9s%12d%n", lineSeparator, "Result:", userResults[i], lineSeparator, "Result:", computersResults[i]);
             println("-----------+-----------------------+-----------------------");
         }
         printf("%8s%4s%9s%12d%3s%9s%12d%n", "Total", lineSeparator, "Points:", finalUserResult, lineSeparator, "Points:", finalComputerResult);
 
         if (finalUserResult == finalComputerResult) {
-            println("It's a tie! Both players have the same total score.");
+            println("\nIt's a tie! Both players have the same total score.");
         } else {
             int finalDiff = Math.abs(finalUserResult - finalComputerResult);
             String winner = finalUserResult > finalComputerResult ? "User" : "Computer";
-            printf("%s wins %d %s more. Congratulations!%n", winner, finalDiff, pointsStr(finalDiff));
+            printf("\n%s wins %d %s more. Congratulations!%n", winner, finalDiff, pointsStr(finalDiff));
         }
     }
 
@@ -317,8 +324,8 @@ public class Bonus {
 
     public static boolean computersChanceToCheat(int maxNum, int midNum) {
         Random rand = new Random();
-        int randomIndex = rand.nextInt(maxNum) + 1;
-        return randomIndex <= midNum;
+        int randomNum = rand.nextInt(maxNum) + 1;
+        return randomNum <= midNum;
     }
 
     public static boolean isComputerCheating(int tourNumber, int scoreDifference) {
