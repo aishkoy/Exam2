@@ -58,10 +58,39 @@ public class Bonus {
         int usersDicesSum = getUserInput();
         userPredicted[tourNumber] = usersDicesSum;
 
-        int dice1 = rollTheDice();
-        printDice(dice1);
-        int dice2 = rollTheDice();
-        printDice(dice2);
+        int dice1, dice2;
+
+        boolean isCheating = isUserCheating();
+
+        if (isCheating){
+
+            isCheating = chanceToCheat(tourNumber);
+
+            if(isCheating){
+                println("User successfully cheated!");
+                println("User rolls the dices...\n");
+                int[][] variables = breakNumIntoTwoSummands(usersDicesSum);
+                int[] randomPair = variables[rand.nextInt(variables.length)];
+                dice1 = randomPair[0];
+                printDice(dice1);
+                dice2 = randomPair[1];
+                printDice(dice2);
+            } else {
+                println("User failed to cheat!");
+                println("User rolls the dices...\n");
+                dice1 = rollTheDice();
+                printDice(dice1);
+                dice2 = rollTheDice();
+                printDice(dice2);
+            }
+        } else{
+            println("User rolls the dices...\n");
+            dice1 = rollTheDice();
+            printDice(dice1);
+            dice2 = rollTheDice();
+            printDice(dice2);
+        }
+
 
         int dicesSum = dice1 + dice2;
         userDice[tourNumber] = dicesSum;
@@ -105,8 +134,6 @@ public class Bonus {
             sumOfDices = Integer.parseInt(inputStr);
             break;
         }
-
-        println("User rolls the dices...\n");
         return sumOfDices;
     }
 
@@ -115,14 +142,15 @@ public class Bonus {
     }
 
     public static void printDice(int dice){
-        String border = "+---------+";
         String[] dicePatterns = {   "|         |\n|    #    |\n|         |",
-                "| #       |\n|         |\n|       # |",
-                "| #       |\n|    #    |\n|       # |",
-                "| #     # |\n|         |\n| #     # |",
-                "| #     # |\n|    #    |\n| #     # |",
-                "| #     # |\n| #     # |\n| #     # |"
-        };
+                                    "| #       |\n|         |\n|       # |",
+                                    "| #       |\n|    #    |\n|       # |",
+                                    "| #     # |\n|         |\n| #     # |",
+                                    "| #     # |\n|    #    |\n| #     # |",
+                                    "| #     # |\n| #     # |\n| #     # |"
+                                };
+
+        String border = "+---------+";
         println(border);
         println(dicePatterns[dice-1]);
         println(border);
@@ -222,6 +250,57 @@ public class Bonus {
             }
 
         }
+    }
+
+    public static boolean isUserCheating(){
+        while(true){
+            print("Do  you want to cheat? (Yes/No): ");
+            String answer = sc.nextLine().strip().toLowerCase();
+            if(answer.equals("yes")){
+                return true;
+            } else if(answer.equals("no")) {
+                return false;
+            } else{
+                println("Invalid answer. Try again.");
+            }
+        }
+    }
+
+    public static boolean chanceToCheat(int tourNumber){
+        double chance = 0.0;
+
+        if(tourNumber == 0){
+            chance = 0.5;
+        } else if(tourNumber == 1){
+            chance = 0.25;
+        } else if(tourNumber == 2){
+            chance = 1.0/6.0;
+        }
+
+        return rand.nextDouble() < chance;
+    }
+
+    public static int[][] breakNumIntoTwoSummands(int userDicesSum){
+        int count = 0;
+        for (int i = 1; i <= 6; i++) {
+            int secondSummand = userDicesSum - i;
+            if (secondSummand >= 1 && secondSummand <= 6) {
+                count++;
+            }
+        }
+
+        int[][] numbers = new int[count][2];
+        int index = 0;
+
+        for(int i = 1; i <= 6; i++){
+            int secondSummand = userDicesSum - i;
+            if (secondSummand >= 1 && secondSummand <= 6) {
+                numbers[index][0] = i;
+                numbers[index][1] = secondSummand;
+                index++;
+            }
+        }
+        return numbers ;
     }
 
     public static void println(String str){
