@@ -67,8 +67,10 @@ public class Step1 {
     public static void printResult(int usersDicesSum, int dicesSum){
         int absDiff = Math.abs(dicesSum - usersDicesSum);
         int result = dicesSum  - absDiff * 2;
+        String resultStr = result == 1 ? "point" : "points";
+
         printf("On the dices fell %d points.%n", dicesSum);
-        String tmpl = String.format("%d-abs(%d - %d) * 2: %d points.", dicesSum, dicesSum, usersDicesSum, result);
+        String tmpl = String.format("%d-abs(%d - %d) * 2: %d %s.", dicesSum, dicesSum, usersDicesSum, result, resultStr);
         println("Result is " + tmpl);
 
         String winOrLose = result > 0 ? "wins" : "lost";

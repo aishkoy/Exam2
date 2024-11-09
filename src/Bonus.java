@@ -7,12 +7,12 @@ public class Bonus {
 
     static int toursNum = 3;
 
-    static int[] userPredicted;
-    static int[] userDice;
+    static int[] userPredictions;
+    static int[] userDiceRolls;
     static int[] userResults;
 
-    static int[] computersPredicted;
-    static int[] computersDice;
+    static int[] computersPredictions;
+    static int[] computersDiceRolls;
     static int[] computersResults;
 
     static int scoreDifference;
@@ -33,12 +33,14 @@ public class Bonus {
     }
 
     public static void gameReset() {
-        userPredicted = new int[toursNum];
-        userDice = new int[toursNum];
+        userPredictions = new int[toursNum];
+        userDiceRolls = new int[toursNum];
         userResults = new int[toursNum];
-        computersPredicted = new int[toursNum];
-        computersDice = new int[toursNum];
+
+        computersPredictions = new int[toursNum];
+        computersDiceRolls = new int[toursNum];
         computersResults = new int[toursNum];
+
         scoreDifference = 0;
     }
 
@@ -61,12 +63,12 @@ public class Bonus {
 
     public static int userTurn(int tourNumber) {
         int usersDicesSum = getUserInput();
-        userPredicted[tourNumber] = usersDicesSum;
+        userPredictions[tourNumber] = usersDicesSum;
 
         int dice1, dice2;
 
         boolean isCheating = isUserCheating();
-        boolean isCheatFailed = false;
+        boolean isCheatingFailed = false;
 
         if (isCheating) {
 
@@ -82,7 +84,7 @@ public class Bonus {
                 printDice(dice2);
             } else {
                 println("User failed to cheat!");
-                isCheatFailed = true;
+                isCheatingFailed = true;
                 println("User rolls the dices...\n");
                 dice1 = rollTheDice();
                 printDice(dice1);
@@ -99,19 +101,19 @@ public class Bonus {
         }
 
         int dicesSum = dice1 + dice2;
-        userDice[tourNumber] = dicesSum;
+        userDiceRolls[tourNumber] = dicesSum;
 
-        return pointScoring(usersDicesSum, dicesSum, isCheatFailed);
+        return scorePoints(usersDicesSum, dicesSum, isCheatingFailed);
     }
 
     public static int computersTurn(int tourNumber) {
         int computersDicesSum = rand.nextInt(11) + 2;
-        computersPredicted[tourNumber] = computersDicesSum;
+        computersPredictions[tourNumber] = computersDicesSum;
 
         printf("\nComputer predicted %d points. ", computersDicesSum);
 
         boolean isCheating = isComputerCheating(tourNumber, scoreDifference);
-        boolean isCheatFailed = false;
+        boolean isCheatingFailed = false;
         int dice1, dice2;
 
         if (isCheating) {
@@ -127,7 +129,7 @@ public class Bonus {
                 printDice(dice2);
             } else {
                 println("Computer failed to cheat!");
-                isCheatFailed = true;
+                isCheatingFailed = true;
                 println("Computer rolls the dices...\n");
                 dice1 = rollTheDice();
                 printDice(dice1);
@@ -144,9 +146,9 @@ public class Bonus {
         }
 
         int dicesSum = dice1 + dice2;
-        computersDice[tourNumber] = dicesSum;
+        computersDiceRolls[tourNumber] = dicesSum;
 
-        return pointScoring(computersDicesSum, dicesSum, isCheatFailed);
+        return scorePoints(computersDicesSum, dicesSum, isCheatingFailed);
 
     }
 
@@ -193,21 +195,20 @@ public class Bonus {
         println("---   Start game    ---");
     }
 
-    public static int pointScoring(int usersDicesSum, int dicesSum, boolean isCheatFailed) {
+    public static int scorePoints(int usersDicesSum, int dicesSum, boolean isCheatingFailed) {
         int absDiff = Math.abs(dicesSum - usersDicesSum);
         int result = dicesSum - absDiff * 2;
 
-        String resultStr = result == 1 ? "point" : "points";
-
         printf("On the dices fell %d points.%n", dicesSum);
         String formula = String.format("%d-abs(%d - %d) * 2", dicesSum, dicesSum, usersDicesSum);
-        if (isCheatFailed) {
+
+        if (isCheatingFailed) {
             result -= 10;
             formula = String.format("( %d-abs(%d - %d) * 2 ) - 10", dicesSum, dicesSum, usersDicesSum);
             println("Since you tried to cheat, the result is calculated using the following formula: " + formula);
-            printf("Result is %s: %d %s.%n%n", formula, result, resultStr);
+            printf("Result is %s: %d %s.%n%n", formula, result, pointsStr(result));
         } else {
-            printf("Result is %s: %d %s.%n%n", formula, result, resultStr);
+            printf("Result is %s: %d %s.%n%n", formula, result, pointsStr(result));
         }
         return result;
     }
@@ -216,26 +217,21 @@ public class Bonus {
         if (userResult == compResult) {
             println("It's a tie! Both players have the same score.");
         } else {
-            String whoWon = userResult > compResult ? "User" : "Computer";
-            String pointsStr = diff == 1 ? "point" : "points";
-            printf("%n%s wins %d %s more. Congratulations!%n%n", whoWon, diff, pointsStr);
+            String winner = userResult > compResult ? "User" : "Computer";
+            printf("%n%s wins %d %s more. Congratulations!%n%n", winner, diff, pointsStr(diff));
         }
     }
 
     public static void showCurrentScore(int userResult, int compResult, int diff) {
-        String userPointsStr = userResult == 1 ? "point" : "points";
-        String compPointsStr = compResult == 1 ? "point" : "points";
-
         println("--------- Current Score ---------");
-        printf("User: %d %s.%n", userResult, userPointsStr);
-        printf("Computer: %d %s.%n", compResult, compPointsStr);
+        printf("User: %d %s.%n", userResult, pointsStr(userResult));
+        printf("Computer: %d %s.%n", compResult, pointsStr(compResult));
 
         if (userResult == compResult) {
             println("It's a tie! Both players have the same score.");
         } else {
-            String diffPointsStr = diff == 1 ? "point" : "points";
             String whoIsAhead = userResult > compResult ? "User" : "Computer";
-            printf("%s is ahead by %d %s.%n", whoIsAhead, diff, diffPointsStr);
+            printf("%s is ahead by %d %s.%n", whoIsAhead, diff, pointsStr(diff));
         }
 
         println("---------------------------------\n");
@@ -258,8 +254,8 @@ public class Bonus {
         printf("%8s%4s%12s%12s%15s%n", "Round", lineSeparator, "User", lineSeparator, "Computer");
         println("-----------+-----------------------+-----------------------");
         for (int i = 0; i < 3; i++) {
-            printf("%12s%12s%9d%3s%12s%9d%n", lineSeparator, "Predicted:", userPredicted[i], lineSeparator, "Predicted:", computersPredicted[i]);
-            printf("%8s%4s%7s%14d%3s%7s%14d%n", rounds[i], lineSeparator, "Dice:", userDice[i], lineSeparator, "Dice:", computersDice[i]);
+            printf("%12s%12s%9d%3s%12s%9d%n", lineSeparator, "Predicted:", userPredictions[i], lineSeparator, "Predicted:", computersPredictions[i]);
+            printf("%8s%4s%7s%14d%3s%7s%14d%n", rounds[i], lineSeparator, "Dice:", userDiceRolls[i], lineSeparator, "Dice:", computersDiceRolls[i]);
             printf("%12s%9s%12d%3s%9s%12d%n", lineSeparator, "Result:", userResults[i], lineSeparator, "Result:", computersResults[i]);
             println("-----------+-----------------------+-----------------------");
         }
@@ -269,9 +265,8 @@ public class Bonus {
             println("It's a tie! Both players have the same total score.");
         } else {
             int finalDiff = Math.abs(finalUserResult - finalComputerResult);
-            String whoWon = finalUserResult > finalComputerResult ? "User" : "Computer";
-            String pointsStr = finalDiff == 1 ? "point" : "points";
-            printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
+            String winner = finalUserResult > finalComputerResult ? "User" : "Computer";
+            printf("%s wins %d %s more. Congratulations!%n", winner, finalDiff, pointsStr(finalDiff));
         }
     }
 
@@ -289,7 +284,6 @@ public class Bonus {
             } else {
                 println("Invalid answer. Try again.");
             }
-
         }
     }
 
@@ -366,6 +360,10 @@ public class Bonus {
             }
         }
         return numbers ;
+    }
+
+    public static String pointsStr(int points){
+        return points == 1 ? "point" : "points";
     }
 
     public static void println(String str){

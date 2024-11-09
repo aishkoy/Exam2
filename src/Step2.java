@@ -89,8 +89,10 @@ public class Step2 {
     public static int pointScoring(int usersDicesSum, int dicesSum){
         int absDiff = Math.abs(dicesSum - usersDicesSum);
         int result = dicesSum  - absDiff * 2;
+        String resultStr = result == 1 ? "point" : "points";
+
         printf("On the dices fell %d points.%n", dicesSum);
-        String tmpl = String.format("%d-abs(%d - %d) * 2: %d points.", dicesSum, dicesSum, usersDicesSum, result);
+        String tmpl = String.format("%d-abs(%d - %d) * 2: %d %s.", dicesSum, dicesSum, usersDicesSum, result, resultStr);
         println("Result is " + tmpl);
 
         return result;
@@ -100,10 +102,10 @@ public class Step2 {
         if(userResult == compResult){
             println("It's a tie! Both players scored the same. Well played!");
         } else{
-            String whoWon = userResult > compResult ? "User" : "Computer";
+            String winner = userResult > compResult ? "User" : "Computer";
             int diff = Math.abs(userResult - compResult);
             String pointsStr = diff == 1 ? "point" : "points";
-            printf("%n%s win %d %s more. Congratulations!%n", whoWon, diff, pointsStr);
+            printf("%n%s win %d %s more. Congratulations!%n", winner, diff, pointsStr);
         }
     }
 

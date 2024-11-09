@@ -7,12 +7,12 @@ public class Step4 {
 
     static int toursNum = 3;
 
-    static int[] userPredicted;
-    static int[] userDice;
+    static int[] userPredictions;
+    static int[] userDiceRolls;
     static int[] userResults;
 
-    static int[] computersPredicted;
-    static int[] computersDice;
+    static int[] computersPredictions;
+    static int[] computersDiceRolls;
     static int[] computersResults;
 
     public static void main(String[] args) {
@@ -31,11 +31,12 @@ public class Step4 {
     }
 
     public static void gameReset(){
-        userPredicted = new int[toursNum];
-        userDice = new int[toursNum];
+        userPredictions = new int[toursNum];
+        userDiceRolls = new int[toursNum];
         userResults = new int[toursNum];
-        computersPredicted = new int[toursNum];
-        computersDice = new int[toursNum];
+
+        computersPredictions = new int[toursNum];
+        computersDiceRolls = new int[toursNum];
         computersResults = new int[toursNum];
     }
 
@@ -56,7 +57,7 @@ public class Step4 {
 
     public static int userTurn(int tourNumber){
         int usersDicesSum = getUserInput();
-        userPredicted[tourNumber] = usersDicesSum;
+        userPredictions[tourNumber] = usersDicesSum;
 
         int dice1 = rollTheDice();
         printDice(dice1);
@@ -64,14 +65,14 @@ public class Step4 {
         printDice(dice2);
 
         int dicesSum = dice1 + dice2;
-        userDice[tourNumber] = dicesSum;
+        userDiceRolls[tourNumber] = dicesSum;
 
         return pointScoring(usersDicesSum, dicesSum);
     }
 
     public static int computersTurn(int tourNumber){
         int computersDicesSum = rand.nextInt(11) + 2;
-        computersPredicted[tourNumber] = computersDicesSum;
+        computersPredictions[tourNumber] = computersDicesSum;
 
         printf("\nComputer predicted %d points.%n", computersDicesSum);
         println("Computer rolls the dices...");
@@ -82,7 +83,7 @@ public class Step4 {
         printDice(dice2);
 
         int dicesSum = dice1 + dice2;
-        computersDice[tourNumber] = dicesSum;
+        computersDiceRolls[tourNumber] = dicesSum;
 
         return pointScoring(computersDicesSum, dicesSum);
 
@@ -147,9 +148,9 @@ public class Step4 {
             println("It's a tie! Both players have the same score.");
         }
         else{
-            String whoWon = userResult > compResult ? "User" : "Computer";
+            String winner = userResult > compResult ? "User" : "Computer";
             String pointsStr = diff == 1 ? "point" : "points";
-            printf("%n%s wins %d %s more. Congratulations!%n%n", whoWon, diff, pointsStr);
+            printf("%n%s wins %d %s more. Congratulations!%n%n", winner, diff, pointsStr);
         }
     }
 
@@ -189,8 +190,8 @@ public class Step4 {
         printf("%8s%4s%12s%12s%15s%n", "Round", lineSeparator, "User", lineSeparator, "Computer");
         println("-----------+-----------------------+-----------------------");
         for(int i = 0; i < 3; i++){
-            printf("%12s%12s%9d%3s%12s%9d%n", lineSeparator, "Predicted:", userPredicted[i], lineSeparator,"Predicted:", computersPredicted[i]);
-            printf("%8s%4s%7s%14d%3s%7s%14d%n",rounds[i], lineSeparator, "Dice:", userDice[i], lineSeparator,"Dice:", computersDice[i]);
+            printf("%12s%12s%9d%3s%12s%9d%n", lineSeparator, "Predicted:", userPredictions[i], lineSeparator,"Predicted:", computersPredictions[i]);
+            printf("%8s%4s%7s%14d%3s%7s%14d%n",rounds[i], lineSeparator, "Dice:", userDiceRolls[i], lineSeparator,"Dice:", computersDiceRolls[i]);
             printf("%12s%9s%12d%3s%9s%12d%n", lineSeparator, "Result:", userResults[i], lineSeparator,"Result:", computersResults[i]);
             println("-----------+-----------------------+-----------------------");
         }
@@ -200,10 +201,10 @@ public class Step4 {
             println("It's a tie! Both players have the same total score.");
         } else{
             int finalDiff = Math.abs(finalUserResult - finalComputerResult);
-            String whoWon = finalUserResult > finalComputerResult ? "User" : "Computer";
+            String winner = finalUserResult > finalComputerResult ? "User" : "Computer";
             String pointsStr = finalDiff == 1 ? "point" : "points";
 
-            printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
+            printf("%s wins %d %s more. Congratulations!%n", winner, finalDiff, pointsStr);
         }
     }
 
