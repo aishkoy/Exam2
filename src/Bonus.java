@@ -209,7 +209,7 @@ public class Bonus {
         if (isCheatingFailed) {
             result -= 10;
             formula = String.format("( %d-abs(%d - %d) * 2 ) - 10", dicesSum, dicesSum, usersDicesSum);
-            println("Since you tried to cheat, the result is calculated using the following formula: " + formula);
+            println("Because the player tried to cheat. He gets a penalty of minus 10 points.");
             printf("Result is %s: %d %s.%n%n", formula, result, pointsStr(result));
         } else {
             printf("Result is %s: %d %s.%n%n", formula, result, pointsStr(result));
