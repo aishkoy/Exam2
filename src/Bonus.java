@@ -15,7 +15,7 @@ public class Bonus {
     static int[] computersDice;
     static int[] computersResults;
 
-    static int scoreDifference = 0;
+    static int scoreDifference;
 
     public static void main(String[] args) {
         do {
@@ -39,10 +39,12 @@ public class Bonus {
         computersPredicted = new int[toursNum];
         computersDice = new int[toursNum];
         computersResults = new int[toursNum];
+        scoreDifference = 0;
     }
 
     public static void tourLaunch(int tourNumber) {
         printGameTitle();
+        println("" + scoreDifference);
 
         int usersResult = userTurn(tourNumber);
         userResults[tourNumber] = usersResult;
@@ -51,7 +53,7 @@ public class Bonus {
         computersResults[tourNumber] = computersResult;
 
         int diff = Math.abs(usersResult - computersResult);
-        scoreDifference = usersResult - computersResult;
+        scoreDifference += usersResult - computersResult;
 
         printCurrentResult(usersResult, computersResult, diff);
         showCurrentScore(usersResult, computersResult, diff);
@@ -106,7 +108,7 @@ public class Bonus {
         int computersDicesSum = rand.nextInt(11) + 2;
         computersPredicted[tourNumber] = computersDicesSum;
 
-        printf("\nComputer predicted %d points.%n", computersDicesSum);
+        printf("\nComputer predicted %d points. ", computersDicesSum);
 
         boolean isCheating = isComputerCheating(tourNumber, scoreDifference);
         boolean isCheatFailed = false;
