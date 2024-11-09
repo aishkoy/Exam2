@@ -183,10 +183,6 @@ public class Step4 {
             finalComputerResult += computersResult;
         }
 
-        int finalDiff = Math.abs(finalUserResult - finalComputerResult);
-        String whoWon = finalUserResult > finalComputerResult ? "User" : "Computer";
-        String pointsStr = finalDiff == 1 ? "point" : "points";
-
         String[] rounds = {"- 1 -", "- 2 -", "- 3 -"};
         String lineSeparator = "|";
         println("----------------------- Finish Game -----------------------");
@@ -199,9 +195,14 @@ public class Step4 {
             println("-----------+-----------------------+-----------------------");
         }
         printf("%8s%4s%9s%12d%3s%9s%12d%n","Total", lineSeparator, "Points:", finalUserResult, lineSeparator,"Points:", finalComputerResult);
+
         if(finalUserResult == finalComputerResult){
             println("It's a tie! Both players have the same total score.");
         } else{
+            int finalDiff = Math.abs(finalUserResult - finalComputerResult);
+            String whoWon = finalUserResult > finalComputerResult ? "User" : "Computer";
+            String pointsStr = finalDiff == 1 ? "point" : "points";
+
             printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
         }
     }

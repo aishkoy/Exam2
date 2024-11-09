@@ -143,20 +143,32 @@ public class Bonus {
     }
 
     public static void printCurrentResult(int userResult, int compResult, int diff){
-        String whoWon = userResult > compResult ? "User" : "Computer";
-        String pointsStr = diff == 1 ? "point" : "points";
-        printf("%n%s wins %d %s more. Congratulations!%n%n", whoWon, diff, pointsStr);
+        if(userResult == compResult){
+            println("It's a tie! Both players have the same score.");
+        }
+        else{
+            String whoWon = userResult > compResult ? "User" : "Computer";
+            String pointsStr = diff == 1 ? "point" : "points";
+            printf("%n%s wins %d %s more. Congratulations!%n%n", whoWon, diff, pointsStr);
+        }
     }
 
     public static void showCurrentScore(int userResult, int compResult, int diff){
         String userPointsStr = userResult == 1 ? "point" : "points";
         String compPointsStr = compResult == 1 ? "point" : "points";
-        String diffPointsStr = diff == 1 ? "point" : "points";
-        String whoIsAhead = userResult > compResult ? "User" : "Computer";
+
         println("--------- Current Score ---------");
         printf("User: %d %s.%n", userResult, userPointsStr);
         printf("Computer: %d %s.%n", compResult, compPointsStr);
-        printf("%s is ahead by %d %s.%n", whoIsAhead, diff, diffPointsStr);
+
+        if (userResult == compResult) {
+            println("It's a tie! Both players have the same score.");
+        } else {
+            String diffPointsStr = diff == 1 ? "point" : "points";
+            String whoIsAhead = userResult > compResult ? "User" : "Computer";
+            printf("%s is ahead by %d %s.%n", whoIsAhead, diff, diffPointsStr);
+        }
+
         println("---------------------------------\n");
     }
 
@@ -171,10 +183,6 @@ public class Bonus {
             finalComputerResult += computersResult;
         }
 
-        int finalDiff = Math.abs(finalUserResult - finalComputerResult);
-        String whoWon = finalUserResult > finalComputerResult ? "User" : "Computer";
-        String pointsStr = finalDiff == 1 ? "point" : "points";
-
         String[] rounds = {"- 1 -", "- 2 -", "- 3 -"};
         String lineSeparator = "|";
         println("----------------------- Finish Game -----------------------");
@@ -187,7 +195,15 @@ public class Bonus {
             println("-----------+-----------------------+-----------------------");
         }
         printf("%8s%4s%9s%12d%3s%9s%12d%n","Total", lineSeparator, "Points:", finalUserResult, lineSeparator,"Points:", finalComputerResult);
-        printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
+
+        if(finalUserResult == finalComputerResult){
+            println("It's a tie! Both players have the same total score.");
+        } else{
+            int finalDiff = Math.abs(finalUserResult - finalComputerResult);
+            String whoWon = finalUserResult > finalComputerResult ? "User" : "Computer";
+            String pointsStr = finalDiff == 1 ? "point" : "points";
+            printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
+        }
     }
 
     public static boolean isGameRestarted(){
