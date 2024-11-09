@@ -72,7 +72,8 @@ public class Step1 {
         println("Result is " + tmpl);
 
         String winOrLose = result > 0 ? "wins" : "lost";
-        printf("User %s!", winOrLose);
+        printf("User %s!%n", winOrLose);
+        println("Game over...");
     }
 
     public static void println(String str){

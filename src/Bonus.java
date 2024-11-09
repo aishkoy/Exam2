@@ -1,7 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
 
-public class Step4 {
+public class Bonus {
     static Scanner sc = new Scanner(System.in);
     static Random rand = new Random();
 
@@ -143,32 +143,20 @@ public class Step4 {
     }
 
     public static void printCurrentResult(int userResult, int compResult, int diff){
-        if(userResult == compResult){
-            println("It's a tie! Both players have the same score.");
-        }
-        else{
-            String whoWon = userResult > compResult ? "User" : "Computer";
-            String pointsStr = diff == 1 ? "point" : "points";
-            printf("%n%s wins %d %s more. Congratulations!%n%n", whoWon, diff, pointsStr);
-        }
+        String whoWon = userResult > compResult ? "User" : "Computer";
+        String pointsStr = diff == 1 ? "point" : "points";
+        printf("%n%s wins %d %s more. Congratulations!%n%n", whoWon, diff, pointsStr);
     }
 
     public static void showCurrentScore(int userResult, int compResult, int diff){
         String userPointsStr = userResult == 1 ? "point" : "points";
         String compPointsStr = compResult == 1 ? "point" : "points";
-
+        String diffPointsStr = diff == 1 ? "point" : "points";
+        String whoIsAhead = userResult > compResult ? "User" : "Computer";
         println("--------- Current Score ---------");
         printf("User: %d %s.%n", userResult, userPointsStr);
         printf("Computer: %d %s.%n", compResult, compPointsStr);
-
-        if (userResult == compResult) {
-            println("It's a tie! Both players have the same score.");
-        } else {
-            String diffPointsStr = diff == 1 ? "point" : "points";
-            String whoIsAhead = userResult > compResult ? "User" : "Computer";
-            printf("%s is ahead by %d %s.%n", whoIsAhead, diff, diffPointsStr);
-        }
-
+        printf("%s is ahead by %d %s.%n", whoIsAhead, diff, diffPointsStr);
         println("---------------------------------\n");
     }
 
@@ -199,11 +187,7 @@ public class Step4 {
             println("-----------+-----------------------+-----------------------");
         }
         printf("%8s%4s%9s%12d%3s%9s%12d%n","Total", lineSeparator, "Points:", finalUserResult, lineSeparator,"Points:", finalComputerResult);
-        if(finalUserResult == finalComputerResult){
-            println("It's a tie! Both players have the same total score.");
-        } else{
-            printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
-        }
+        printf("%s wins %d %s more. Congratulations!%n", whoWon, finalDiff, pointsStr);
     }
 
     public static boolean isGameRestarted(){

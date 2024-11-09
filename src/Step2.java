@@ -97,10 +97,14 @@ public class Step2 {
     }
 
     public static void printResult(int userResult, int compResult){
-        String whoWon = userResult > compResult ? "User" : "Computer";
-        int diff = Math.abs(userResult - compResult);
-        String pointsStr = diff == 1 ? "point" : "points";
-        printf("%n%s win %d %s more. Congratulations!%n", whoWon, diff, pointsStr);
+        if(userResult == compResult){
+            println("It's a tie! Both players scored the same. Well played!");
+        } else{
+            String whoWon = userResult > compResult ? "User" : "Computer";
+            int diff = Math.abs(userResult - compResult);
+            String pointsStr = diff == 1 ? "point" : "points";
+            printf("%n%s win %d %s more. Congratulations!%n", whoWon, diff, pointsStr);
+        }
     }
 
     public static void println(String str){
