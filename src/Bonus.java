@@ -15,7 +15,7 @@ public class Bonus {
     static int[] computersDice;
     static int[] computersResults;
 
-    static int scoreDifference;
+    static int scoreDifference = 0;
 
     public static void main(String[] args) {
         do {
@@ -51,7 +51,8 @@ public class Bonus {
         computersResults[tourNumber] = computersResult;
 
         int diff = Math.abs(usersResult - computersResult);
-        scoreDifference = diff;
+        scoreDifference = usersResult - computersResult;
+
         printCurrentResult(usersResult, computersResult, diff);
         showCurrentScore(usersResult, computersResult, diff);
     }
@@ -67,7 +68,7 @@ public class Bonus {
 
         if (isCheating) {
 
-            isCheating = usersChanceToCheat(tourNumber);
+            isCheating = playersChanceToCheat(tourNumber);
             if (isCheating) {
                 println("User successfully cheated!");
                 println("User rolls the dices...\n");
@@ -87,6 +88,7 @@ public class Bonus {
                 printDice(dice2);
             }
         } else {
+            println("User decided not to cheat.");
             println("User rolls the dices...\n");
             dice1 = rollTheDice();
             printDice(dice1);
@@ -107,19 +109,31 @@ public class Bonus {
         printf("\nComputer predicted %d points.%n", computersDicesSum);
 
         boolean isCheating = isComputerCheating(tourNumber, scoreDifference);
-
+        boolean isCheatFailed = false;
         int dice1, dice2;
 
         if (isCheating) {
-            println("Computer successfully cheated!");
-            println("Computer rolls the dices...\n");
-            int[][] variables = breakNumIntoTwoSummands(computersDicesSum);
-            int[] randomPair = variables[rand.nextInt(variables.length)];
-            dice1 = randomPair[0];
-            printDice(dice1);
-            dice2 = randomPair[1];
-            printDice(dice2);
+            isCheating = playersChanceToCheat(tourNumber);
+            if (isCheating) {
+                println("Computer successfully cheated!");
+                println("Computer rolls the dices...\n");
+                int[][] variables = breakNumIntoTwoSummands(computersDicesSum);
+                int[] randomPair = variables[rand.nextInt(variables.length)];
+                dice1 = randomPair[0];
+                printDice(dice1);
+                dice2 = randomPair[1];
+                printDice(dice2);
+            } else {
+                println("Computer failed to cheat!");
+                isCheatFailed = true;
+                println("Computer rolls the dices...\n");
+                dice1 = rollTheDice();
+                printDice(dice1);
+                dice2 = rollTheDice();
+                printDice(dice2);
+            }
         } else {
+            println("Computer decided not to cheat.");
             println("Computer rolls the dices...");
             dice1 = rollTheDice();
             printDice(dice1);
@@ -130,7 +144,7 @@ public class Bonus {
         int dicesSum = dice1 + dice2;
         computersDice[tourNumber] = dicesSum;
 
-        return pointScoring(computersDicesSum, dicesSum, isCheating);
+        return pointScoring(computersDicesSum, dicesSum, isCheatFailed);
 
     }
 
@@ -291,7 +305,7 @@ public class Bonus {
         }
     }
 
-    public static boolean usersChanceToCheat(int tourNumber) {
+    public static boolean playersChanceToCheat(int tourNumber) {
         double chance = 0.0;
 
         if (tourNumber == 0) {
